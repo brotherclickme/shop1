@@ -3,3 +3,4 @@ console.log(a)
 
 
 confirm('ni好')
+alert(a)

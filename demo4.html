@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .divsty{
+        height: 800px;
+        width: 900px;
+        border: 1px solid #000;
+    }
+    .red_style{
+      color: red
+    }
+</style>
+<body>
+    <div style="display: flex">
+        <div id="divCont" class="divsty" contenteditable="true">
+        </div>
+        <div id="imgCont"></div>
+    </div>
+    <button id="btn">提交</button>
+</body>
+<script>
+let fileList = []
+let btnObj = document.querySelector("#btn")
+let divContObj = document.querySelector('#divCont')
+btnObj.addEventListener('click', bthClick)
+function bthClick() {
+    fileList = []
+    document.querySelector('#imgCont').innerHTML = ''
+    let content = divContObj.innerHTML.split('<img src="')
+    let splitItem = []
+    content.forEach(item => {
+      let a = item.split('" alt="">')
+      splitItem.push(...a)
+    })
+    let imgList =  splitItem.filter(item => item.includes('data:image/png;base64'))
+    let c =  splitItem.filter(item => !item.includes('data:image/png;base64'))
+    let text = c.reduce((pre, next) => pre+ '  ' + next, '')
+    console.log(divContObj.innerHTML)
+    imgList.forEach((item, index) => {
+      let temp =  dataURLtoBlob(item, 'img' + index)
+      fileList.push(temp)
+    })
+    
+    let textObj = document.createElement('div')
+    textObj.setAttribute('class', 'red_style')
+    textObj.innerHTML = text;
+    document.querySelector('#imgCont').appendChild(textObj);
+    // divContObj.innerHTML
+    setTimeout(() => {
+      fileList.forEach(blob => {
+          var reader = new FileReader();
+          var imgs = new Image(); 
+          imgs.file = blob;
+          console.log()
+          reader.onload = (function(aImg) {
+            return function(e) {
+              aImg.src = e.target.result;
+            };
+          })(imgs);
+          reader.readAsDataURL(blob);
+          document.querySelector('#imgCont').appendChild(imgs);
+      })
+    })
+}
+//base64转file   可以问后台要那种文件格式blob  还是base64格式
+function dataURLtoBlob(dataurl, name) {//base64转file
+      var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
+      }
+      return new File([u8arr], name, {
+        type: mime,
+      })
+    }
+</script>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app" @hook:mounted="doSomething" @hook:beforeUpdated="loading = true" @hook:updated="loading = false"
+        @hook:mounted="loading = false">
+        <!-- {{ message }}
+            
+        <div v-for="(item,index) in tree">{{item.name}}</div> -->
+        <button @click="setNameValue">点我</button>
+        {{loading}}
+        {{userInfo.name}}
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            loading: 'true',
+            tree1: [
+                { name: '1' },
+                { name: '2' },
+                { name: '3' },
+            ],
+            userInfo: {
+                name: "111",
+                sex: '男',
+                age: 18
+            }
+        },
+        watch: {
+            "userInfo": {
+                handler(newD, oldD) {
+                    console.log(newD)
+                },
+                immediate: true,
+                deep: true
+            }
+        },
+        computed: {
+            tree() {
+                return this.tree1.filter((item) => {
+                    return item.name > 1
+                })
+            }
+        },
+        methods: {
+            setNameValue() {
+                this.userInfo.name = 222
+            },
+            doSomething() {
+                console.log(2222)
+            }
+        },
+        mounted() {
+            this.$once('hook:created', () => {
+                alert(22222)
+            })
+        }
+    })
+    console.log(app.$options.render)
+</script>
+
+</html>

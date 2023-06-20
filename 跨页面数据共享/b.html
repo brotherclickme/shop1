@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./跨页面数据共享.js"></script>
+    <style>
+        .content{
+            --width: 300px;
+            height: 100px;
+            width: var(--width);
+            margin-left:calc(50vw - var(--width) / 2);
+            margin-top: 50px;
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <p id="content"></p>
+    </div>
+</body>
+<script>
+    listener((e) => {
+        let contentObj = document.querySelector('#content')
+        console.log(e.data)
+        contentObj.innerHTML = e.data.changInfo
+    })
+</script>
+</html>

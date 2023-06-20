@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 弹框样式 */
+    #dog{
+        border: 1px solid #f6c7c7;
+    }
+    /* 蒙层 */
+    #dog::backdrop{
+        background-color: rgba(205, 17, 17, 0.3);
+    }
+</style>
+<body>
+    <button type="button" onclick="dog.showModal()">弹框</button>
+    <!-- polyfill -->
+    <dialog id="dog">
+        <div class="win">
+            <p>this is dialog</p>
+        </div>
+        <button type="button" onclick="dog.close()">关闭</button>
+    </dialog>
+</body>
+</html>

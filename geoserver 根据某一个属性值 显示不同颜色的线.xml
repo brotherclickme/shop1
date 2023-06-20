@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0" 
+ xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" 
+ xmlns="http://www.opengis.net/sld"
+ xmlns:sld="http://www.opengis.net/sld"
+ xmlns:ogc="http://www.opengis.net/ogc" 
+ xmlns:xlink="http://www.w3.org/1999/xlink" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- a Named Layer is the basic building block of an SLD document -->
+  <sld:NamedLayer>
+    <sld:Name>ceshiline</sld:Name>
+    <sld:UserStyle>
+    <!-- Styles can have names, titles and abstracts -->
+      <sld:Title>ceshiline</sld:Title>
+      <sld:Abstract>A fuza style that draws a line</sld:Abstract>
+      <!-- FeatureTypeStyles describe how to render different features -->
+      <!-- A FeatureTypeStyle for rendering lines -->
+        <sld:FeatureTypeStyle>
+            <Rule>
+                 <ogc:Filter>
+                    <ogc:Or>
+                      <ogc:And>
+                        <ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyName>lane_type</ogc:PropertyName>
+                            <ogc:Literal>0</ogc:Literal>
+                        </ogc:PropertyIsGreaterThan>
+                        <ogc:PropertyIsLessThan>
+                            <ogc:PropertyName>lane_type</ogc:PropertyName>
+                            <ogc:Literal>1000</ogc:Literal>
+                        </ogc:PropertyIsLessThan>
+                      </ogc:And>
+                      <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>lane_type</ogc:PropertyName>
+                      <ogc:Literal>0</ogc:Literal>
+                      </ogc:PropertyIsEqualTo>
+                    </ogc:Or>
+                  </ogc:Filter>
+                  <!--scale1-->
+                  <LineSymbolizer>
+                    <Stroke>
+                      <CssParameter name="stroke">#00F5FF</CssParameter>
+                      <CssParameter name="stroke-width">2</CssParameter>
+                    </Stroke>
+                  </LineSymbolizer>
+            </Rule>
+            <sld:VendorOption name="ruleEvaluation">first</sld:VendorOption>
+        </sld:FeatureTypeStyle>
+        <sld:FeatureTypeStyle>
+            <Rule>
+                  <ogc:Filter>
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>lane_type</ogc:PropertyName>
+                        <ogc:Literal>16</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
+                  </ogc:Filter>
+                  <!--scale1-->
+                  <LineSymbolizer>
+                    <Stroke>
+                      <CssParameter name="stroke">
+                      <ogc:Function name="env">
+                         <ogc:Literal>size</ogc:Literal>
+                         <ogc:Literal>#00f5ff</ogc:Literal>
+                      </ogc:Function>
+                      </CssParameter>
+                      <CssParameter name="stroke-width">2</CssParameter>
+                    </Stroke>
+                  </LineSymbolizer>
+            </Rule>
+            <sld:VendorOption name="ruleEvaluation">first</sld:VendorOption>
+        </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:NamedLayer>
+</StyledLayerDescriptor>

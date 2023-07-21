@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .img{
+            width: 300px;
+        }
+        .text{
+            width: 400px;
+            height: 500px;
+            inset: 0;
+            /* inset属性用作定位元素的top、right、bottom、left这些属性的简写 */
+            /* inset: 1px 2px; 等同于 `top: 1px; right: 2px; bottom: 1px; left: 2px;` 和 padding, margin 一样 */
+            font-size: 30px;
+            background-color: #fff;
+            font-weight: 800;
+            position: absolute;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            mix-blend-mode: screen; 
+            /* 混合后面的背景颜色 */
+        }
+    </style>
+</head>
+<body>
+    <div><img class="img" src="https://img.tukuppt.com/photo-big/00/00/94/6152bc0ce6e5d805.jpg"/></div>
+    <div class="text">三国志</div>
+</body>
+</html>

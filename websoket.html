@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        class WS {
+            constructor(options) {
+                this.url = options.url;
+                this.group = options.group;
+                this.cb = options.cb;
+                this.type = options.type;
+                this.init();
+                this.connect = {}
+                this.echoTimer = null
+            }
+
+            heartStart() {
+                const echoMsg = {
+                    event: 'echo',
+                    callback: new Date().getTime(),
+                };
+
+                if (this.connect.readyState !== 1) return;
+                this.send(echoMsg);
+                clearTimeout(this.echoTimer);
+                this.echoTimer = setTimeout(() => this.heartStart(), 5000);
+            }
+
+            isJsonString(str) {
+                try {
+                    const toObj = JSON.parse(str); // json字符串转对象
+                    /*
+                      判断条件 1. 排除null可能性 
+                               2. 确保数据是对象或数组
+                  */
+                    if (toObj && typeof toObj === 'object') {
+                        return true;
+                    }
+                } catch { }
+                return false;
+            }
+
+            async init() {
+                // this.removeAllListener();
+                let connect = await new WebSocket(this.url);
+                this.connect = connect
+                this.connect.onopen = () => {
+                    // this.send(register(this.group));
+                    // this.send(statusCreator())
+                    this.heartStart();
+                    this.cb(this);
+                };
+
+                this.connect.onmessage = (msg) => {
+                    if (msg.data && this.isJsonString(msg.data)) {
+                        if (this.type === 'event') {
+                            const { data } = msg.data && JSON.parse(msg.data);
+                            let list = [];
+                            data.forEach((item) => {
+                                let a = {
+                                    path: [item.lng, item.lat],
+                                    clickType: 'shijian',
+                                    wrname: item.eventName || ' ',
+                                    type: item.eventType,
+                                    id: item.eventId,
+                                    ...item,
+                                };
+                                list.push(a);
+                            });
+                            dispatch({
+                                type: 'deviceModel/save',
+                                payload: {
+                                    eventList: list,
+                                },
+                            });
+                        } else if (this.type === 'truk') {
+                            const { data } = msg.data && JSON.parse(msg.data);
+                            const { carList, carListDetial, carNames } = formatData(data);
+                            dispatch({
+                                type: 'deviceModel/save',
+                                payload: {
+                                    carList,
+                                    carNames,
+                                    carListDetial,
+                                },
+                            });
+                        } else if (this.type === 'longmendiao') {
+                            const { data } = msg.data && JSON.parse(msg.data);
+                            let { gantryList = [],
+                                gantryNames = [],
+                                gantryDetial = {} } = fromatLongMenDiao(data)
+                            dispatch({
+                                type: 'deviceModel/save',
+                                payload: {
+                                    gantryList,
+                                    gantryNames,
+                                    gantryDetial,
+                                },
+                            });
+                        } else if (this.type === 'road') {
+                            const { data } = msg.data && JSON.parse(msg.data);
+                            // let a = Math.ceil(Math.random() * 9)
+                            // data.push(testData[a])
+                            // console.log('0000newData', data)
+                            dispatch({
+                                type: 'deviceModel/saveNoEqOld',
+                                payload: {
+                                    laneType: data
+                                },
+                            });
+                        }
+                    }
+
+                    // if (typeof callbacks[types] === 'function') {
+                    //   callbacks[types](data)
+                    // }
+                    // if (Array.isArray(callbacks[types])) {
+                    //   callbacks["carList"].forEach(cb => cb(data))
+                    // }
+                };
+
+                this.connect.onclose = () => {
+                    console.log('socket close');
+                    setTimeout(() => {
+                        this.init();
+                    }, 5000);
+                };
+
+                this.connect.onerror = () => {
+                    console.log('socket error');
+                    // setTimeout(() => {
+                    //   this.init()
+                    // }, 5000);
+                };
+            }
+
+            send(msg) {
+                if (this.connect.readyState !== 1) return;
+                this.connect.send(JSON.stringify(msg));
+                // this.sendJSON(JSON.stringify(msg))
+            }
+
+            sendJSON(msg) {
+                if (this.connect.readyState !== 1) return;
+                this.connect.send(msg);
+            }
+
+            on(type, cb) {
+                callbacks[type] = cb;
+            }
+
+            receive(type, cb) {
+                if (!callbacks[type]) {
+                    callbacks[type] = [cb];
+                } else {
+                    callbacks[type].push(cb);
+                }
+            }
+
+            removeListener(type, cb) {
+                if (!callbacks[type]) return;
+                callbacks[type].splice(callbacks[type].indexOf(cb), 1);
+            }
+            removeListeners(type) {
+                callbacks[type] = null;
+            }
+            removeAllListener() {
+                Object.keys(callbacks).forEach((key) => (callbacks[key] = null));
+            }
+            close() {
+                this.connect.onclose = null;
+                this.connect.close();
+            }
+        }
+
+
+        const useWS = (url = '', type = '') => {
+            return new Promise(function (resolve) {
+                new WS({
+                    url,
+                    type,
+                    group: '',
+                    cb: (Ws) => {
+                        resolve(Ws)
+                    },
+                });
+            })
+        };
+        useWS('ws://10.169.105.187:8083/flink/getVehicleInfo')
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+section{
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+section:nth-of-type(1){
+    background-image: url(./image/2.jpg);
+}
+section:nth-of-type(2){
+    background-image: url(./image/3.jpg);
+}
+section:nth-of-type(3){
+    background-image: url(./image/4.jpg);
+}
+
+</style>
+<body>
+    <section> <h1>11111111111111</h1></section>
+    <section> <h1>11111111111111</h1></section>
+    <section> <h1>11111111111111</h1></section>
+</body>
+<script src="./gsap/gsap.min.js"></script>
+<script src="./gsap/ScrollTrigger.min.js"></script>
+<!-- <script src="./gsap/Flip.min.js"></script>
+<script src="./gsap/Draggable.min.js"></script> -->
+<script>
+    const sections = document.querySelectorAll('section')
+    gsap.registerPlugin(ScrollTrigger)
+    console.log(gsap.fromTo)
+    sections.forEach((section) => {
+        gsap.fromTo(
+            section,
+            {
+                backgroundPositionY: `-${window.innerHeight /2 }px`
+            },
+            { 
+                backgroundPositionY: `${window.innerHeight / 2 }px`,
+                ease: 'none',
+                scrollTrigger: {
+                    scrub: true,
+                    trigger: section
+                }
+            }
+            
+        )
+    })
+</script>
+</html>

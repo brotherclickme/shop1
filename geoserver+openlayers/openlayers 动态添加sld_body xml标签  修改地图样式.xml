@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0" 
+ xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" 
+ xmlns="http://www.opengis.net/sld"
+ xmlns:sld="http://www.opengis.net/sld"
+ xmlns:ogc="http://www.opengis.net/ogc" 
+ xmlns:xlink="http://www.w3.org/1999/xlink" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <sld:NamedLayer>
+    <sld:Name>${roadNet}</sld:Name> // geoserver 图层name
+    <sld:UserStyle>
+      <sld:Title>ceshiline</sld:Title>
+      <sld:Abstract>A fuza style that draws a line</sld:Abstract>
+        <sld:FeatureTypeStyle>
+            <Rule>
+                  <LineSymbolizer>
+                    <Stroke>
+                      <CssParameter name="stroke">#2ddf6b</CssParameter>
+                      <CssParameter name="stroke-width">2</CssParameter>
+                    </Stroke>
+                  </LineSymbolizer>
+            </Rule>
+        </sld:FeatureTypeStyle>
+        <sld:FeatureTypeStyle>
+            <Rule>
+                  <ogc:Filter>
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>lane_type</ogc:PropertyName>
+                            <ogc:Literal>lane2_heng2</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
+                  </ogc:Filter>
+                  <LineSymbolizer>
+                    <Stroke>
+                      <CssParameter name="stroke">
+                         <ogc:Literal>#1495e7</ogc:Literal>
+                      </CssParameter>
+                    </Stroke>
+                  </LineSymbolizer>
+            </Rule>
+            <sld:VendorOption name="ruleEvaluation">first</sld:VendorOption>
+        </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:NamedLayer>
+</StyledLayerDescriptor>
+
+<!-- openlayers 调用 -->
+<!-- import Tile from 'ol/layer/Tile.js';
+import {TileWMS} from 'ol/source'; -->
+<!-- let a = new Tile({
+    source: new TileWMS({
+      ratio: 1,
+      url: url,
+      crossOrigin: 'anonymous',
+      serverType: 'geoserver',
+      params: {
+        // LAYERS: roadNet,
+        // TILED: true,
+        // env: `color:${'#188efd'}`,
+        sld_body : xmlColor
+      },
+    }),
+  }); -->
+  <!-- map.addlayer(a) -->

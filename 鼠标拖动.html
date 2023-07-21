@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #tuoBox {
+        position: fixed;
+        top: 100px;
+        left: 1000px;
+        width: 100px;
+        height: 100px;
+        background-color: aquamarine;
+    }
+</style>
+
+<body>
+    <div id="tuoBox"></div>
+</body>
+<script>
+
+    const reg = /translate\((-?\d+(\.\d+)?)px, (-?\d+(\.\d+)?)px\)/
+    let boxObj = document.querySelector('#tuoBox');
+    let primaryMouseButtonDown = false
+    function setPrimaryButtonState(e) {
+        let flags = e.buttons !== undefined ? e.buttons : e.which;
+        primaryMouseButtonDown = (flags & 1) === 1;
+    }
+    function getTranslate(el) {
+        if (!el.style.transform) {
+            return [0, 0]
+        }
+        console.log(el.style.transform, '--el.style.transform.')
+        return el.style.transform.replace(reg, '$1,$3').split(',').map(Number)
+    }
+    document.addEventListener("mousedown", setPrimaryButtonState);
+    document.addEventListener("mousemove", setPrimaryButtonState);
+    document.addEventListener("mouseup", setPrimaryButtonState);
+    boxObj.addEventListener("mousedown", mouseMove); // react 中绑定 onMouseDown 
+    function mouseMove(e) {
+        console.log(9090)
+        const sc = 1 // window.innerWidth / 1920; // 如果你的页面缩放了  这是缩放比例
+        const sc1 = 1 // window.innerHeight / 1080;
+        const [tx, ty] = getTranslate(boxObj);
+        
+        const cx = e.clientX;
+        const cy = e.clientY;
+        document.onmousemove = evt => {
+            if (!primaryMouseButtonDown) return
+            let x = (evt.clientX - cx) / sc + tx;
+            let y = (evt.clientY - cy) / sc1 + ty
+            let xMax = (evt.clientX - cx) / sc + tx;
+            let yMax = (evt.clientY - cy) / sc1 + ty
+            if (x <= -30) x = -30;
+            if (y <= -91) y = -91;
+            if (xMax >= window.innerWidth + 240) x = window.innerWidth + 240;
+            if (yMax >= window.innerHeight) y = window.innerHeight;
+            boxObj.style.transform = `translate(${x}px,${y}px)`
+        }
+
+        document.onmouseup = () => {
+            document.onmousemove = null
+            document.onmouseup = null
+        }
+    }
+</script>
+
+</html>

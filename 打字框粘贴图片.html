@@ -12,8 +12,16 @@
         width: 900px;
         border: 1px solid #000;
     }
+    .divsty img{
+      width: 30px;
+      height: 30px;
+    }
     .red_style{
       color: red
+    }
+    .image{
+      width: 90vw;
+      height: 90vh;
     }
 </style>
 <body>
@@ -29,6 +37,18 @@ let fileList = []
 let btnObj = document.querySelector("#btn")
 let divContObj = document.querySelector('#divCont')
 btnObj.addEventListener('click', bthClick)
+divContObj.onclick = function (e) {
+  console.log(e.target.src)
+  if(e.target.src) {
+    var imgs = new Image(); 
+    imgs.src = e.target.src
+    imgs.style.position = 'fixed'
+    imgs.style.top = '100px'
+    imgs.style.left = '100px'
+    imgs.setAttribute('class', 'image')
+    document.querySelector('body').appendChild(imgs)
+  }
+}
 function bthClick() {
     fileList = []
     document.querySelector('#imgCont').innerHTML = ''
@@ -57,13 +77,13 @@ function bthClick() {
           var reader = new FileReader();
           var imgs = new Image(); 
           imgs.file = blob;
-          console.log()
           reader.onload = (function(aImg) {
             return function(e) {
               aImg.src = e.target.result;
             };
           })(imgs);
           reader.readAsDataURL(blob);
+          console.log(imgs, '----imgs')
           document.querySelector('#imgCont').appendChild(imgs);
       })
     })

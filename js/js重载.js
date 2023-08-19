@@ -1,19 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-<script>
-    
+var arr = [1,2,3,4,5];
+//注意:这里不能写成箭头函数，否则this指向的是window对象
+Array.prototype.search = function() {
+   var len = arguments.length;
+   switch(len){
+   case 0:
+	 return this;
+   case 1:
+	 return `${arguments[0]}`;
+   case 2:
+	 return `${arguments[0]},${arguments[1]}`;
+  }
+}
+// console.log(arr.search()) //[1,2,3,4,5]
+// console.log(arr.search(1)) //1
+// console.log(arr.search(3,2)) //1,2
+
 function addMethon(obj, name, fn) {
     let old = obj[name]
+    console.log(fn.length, 'fn')
     obj[name] = function () {
-        console.log(old, arguments.length, '9999')
+        console.log(fn.length, arguments.length, '9999')
         if(fn.length === arguments.length) {
             console.log(111)
             return fn.apply(this, arguments)
@@ -37,6 +43,3 @@ addMethon(person, 'geName', function (age, age2) {
 // person.geName()
 person.geName(2, 3)
 // person.geName(2)
-console.log(person.geName)
-</script>
-</html>

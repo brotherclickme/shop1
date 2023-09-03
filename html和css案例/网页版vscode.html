@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <div class="btn"><button>打开文件夹</button></div>
+    </div>
+    <script>
+        let bth = document.querySelector('button');
+        bth.addEventListener('click', async function() {
+            try {
+               let file = await  showDirectoryPicker() // 返回的的是一个promise  fileApi
+               let root = await handerFn(file)
+               console.log()
+               root.children.forEach( async (item) => {
+                let fileItem = await item.getFile()
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let fileIt = e.target.result
+                    console.log(fileIt, e)
+
+                }
+                reader.readAsText(fileItem, 'utf-8');
+               })
+
+            } catch {
+                // 
+            }
+            async function handerFn(handle) {
+                if(handle.kind === 'file'){
+                    return handle
+                }
+                handle.children = []
+                const iter = await handle.entries() // 获取文件所有内容
+               for await (const info of iter) {
+                const children = await handerFn(info[1])
+                handle.children.push(children)
+               }
+               return handle
+            }
+        })
+    </script>
+</body>
+</html>

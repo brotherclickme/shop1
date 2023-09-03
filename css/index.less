@@ -1,0 +1,39 @@
+.container{
+    display: flex;
+    justify-content: space-between;
+    margin: 80px;
+    position: relative;
+   div{
+    width: 30%;
+    height: 30%;
+    img{
+        width: 200px;
+        height: 200px;
+    }
+   }
+  
+}
+
+.pointer{
+    --w: 200px;
+    --h: 200px;
+    --l: 30px;
+    --m: 15px;
+    --x: 0px;
+    --y: 0px;
+    transition: all 0.2s linear;
+    width: calc(var(--w) + var(--m) * 2);
+    height:  calc(var(--h) + var(--m) * 2);
+    border: 1px solid red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    margin-left: calc(var(--m) * -1);
+    margin-top: calc(var(--m) * -1);
+    transform: translate(var(--x), var(--y));
+    // -webkit-mask: conic-gradient();
+    -webkit-mask:conic-gradient(at var(--l) var(--l), transparent 75%, blue 75% 100%) 0px 0px;
+    -webkit-mask-size: calc(100% - var(--l)) calc(100% - var(--l));
+   }
+   @length: 10
